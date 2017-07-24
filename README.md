@@ -6,15 +6,17 @@
 
 This repository contains some tools coding by pyhon language can be used to automatic repair ArcGIS Vector Tile Package or Service. 
 
-## Use Guide
+## User Guide
 
 
-1 down load this 
+1 repairtextoffsettool - a tool used to customize vector tiles style file to support label text offset for escape overlap the symbol icon.
+ 
 
 ## Requirements
 
-* [ArcGIS Runtime SDK for iOS 100](https://developers.arcgis.com/en/ios/) (Requires ArcGIS Online account; free to sign up)
-* XCode 8 (or higher)
-* iOS 10 SDK (or higher)
+* Pyhon 3.6.1
+* [ArcGIS API for Python](https://developers.arcgis.com/python/guide/install-and-set-up/)
+
+
 
 
