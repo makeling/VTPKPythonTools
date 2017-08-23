@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+# Requires Python 2.7+
+
+# Demonstrates how to add users to Portal for ArcGIS in bulk
+
+# For Http calls
+import httplib, urllib2, urllib, json
+# For system tools
+import sys, os
+# For reading passwords without echoing
+import getpass
+
+
+# Defines the entry point into the script
+def main(argv=None):
+    # Ask for admin/publisher user name and password
+    username = raw_input("Enter the initial administrator account name: ")
+    password = raw_input("Enter the password for the initial administrator account: ")
+
+    fullname = raw_input("Enter the full name for the initial administrator account: ")
+
+    email = raw_input("Enter the account email address: ")
+
+    description = raw_input("Enter an optional description for the account: ")
+
+    securityQuestionIdx = 1
+
+    securityQuestionAns = "chifeng"
+
+    contentStore = raw_input("Enter the path to the location of the site's content: ")
+    # Ask for server name
+    portalUrl = raw_input("Enter portal URL: ")
+
+
+    # Set up required properties for config store
+    # configStoreConnection = {"connectionString": contentStore,
+    #                          "type": "fileStore",
+    #                          "provider":"FileSystem"}
+
+    configStoreConnection = {"type": "fileStore", "provider": "FileSystem",
+     "connectionString": "/home/ags105/arcgis/portal/usr/arcgisportal/content"}
+
+
+    # Construct URL to create a new site
+    createNewSiteURL = "/arcgis/portaladmin/createNewSite?"
+
+    # Set up parameters for the request
+    params = urllib.urlencode({'username': username, 
+                               'password': password, 
+                               'fullname':fullname,
+                               'email':email,
+                               'description':description,
+                               'securityQuestionIdx':1,
+                               'securityQuestionAns':securityQuestionAns,
+                               'configStoreConnection':configStoreConnection,
+                               'f': 'json'})
+
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+
+
+    # Connect to URL and post parameters
+    request = urllib2.Request(portalUrl + createNewSiteURL, params, {'Referer': portalUrl})
+
+    # POST the create request
+    response = urllib2.urlopen(request).read()
+
+    responseJSON = json.loads(response)
+    # Log results
+    if responseJSON.has_key('error'):
+        errDict = responseJSON['error']
+
+        message = 'Error Code: %s \n Message: %s' % (errDict['code'],errDict['message'])
+        print '\n' + message
+    else:
+        # Success
+        if responseJSON.has_key('status'):
+            resultStatus = responseJSON['status']
+            print 'create site succeed!'
+
+
+# Script start
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
